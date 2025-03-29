@@ -984,9 +984,8 @@ class Project(object):
       gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
       if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
         self.mirror_url = self.mirror_url_mapping.get(namespace, '')
-      return self.mirror_url
     except IndexError:
-      return self.mirror_url
+      pass
 
   @property
   def Derived(self):
@@ -2651,10 +2650,9 @@ class Project(object):
     if not self.worktree:
       cmd.append('--update-head-ok')
 
-    if self.remote.url:
-      if use_mirror and self.mirror_url:
-        name_mirror = self.remote.name + '_mirror'
-        cmd.append(name_mirror)
+    if use_mirror and self.mirror_url:
+      name_mirror = self.remote.name + '_mirror'
+      cmd.append(name_mirror)
     else:
       cmd.append(name)
 
@@ -2722,12 +2720,12 @@ class Project(object):
         if use_mirror and self.mirror_url:
           print("Fetch {0},{1} from mirror, use {2} s".format(self.name, self.revisionExpr, fetch_time))
         else:
-          print("Fetch {0},{1} form source, use {2} s".format(self.name, self.revisionExpr, fetch_time))
+          print("Fetch {0},{1} from source, use {2} s".format(self.name, self.revisionExpr, fetch_time))
       else:
         if use_mirror and self.mirror_url:
-          print("Fetch {0},{1} form mirror failed {2}, use {3} s".format(self.name, self.revisionExpr, ret, fetch_time))
+          print("Fetch {0},{1} from mirror failed {2}, use {3} s".format(self.name, self.revisionExpr, ret, fetch_time))
         else:
-          print("Fetch {0},{1} form source failed {2}, use {3} s".format(self.name, self.revisionExpr, ret, fetch_time))
+          print("Fetch {0},{1} from source failed {2}, use {3} s".format(self.name, self.revisionExpr, ret, fetch_time))
       if ret == 0:
         ok = True
         break

@@ -275,7 +275,7 @@ later is required to fix a server side protocol bug.
                  help='delete refs that no longer exist on the remote')
     p.add_option('--skip-hook', dest='skip_hook', action='store_true',
                  help='skip sync hook')
-    p.add_option('--no-mirror', dest='no_mirror', action='store_true',
+    p.add_option('--no-mirror', dest='no_mirror', action='store_true', default=False,
                  help='Not use mirror')
     if show_smart:
       p.add_option('-s', '--smart-sync',
@@ -308,7 +308,8 @@ later is required to fix a server side protocol bug.
     """
     try:
         for project in projects:
-          project.SetMirrorUrl(project.remote.url)
+          if not opt.no_mirror:
+            project.SetMirrorUrl(project.remote.url)
           success = self._FetchHelper(opt, project, *args, **kwargs)
           if not success and opt.fail_fast:
             break
