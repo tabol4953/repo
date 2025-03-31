@@ -863,10 +863,7 @@ class Project(object):
   working_tree_files = ['config', 'packed-refs', 'shallow']
   working_tree_dirs = ['logs', 'refs']
   mirror_url_mapping = {
-    "openharmony": {
-      'http': "https://github.com/openharmony/",
-      'ssh': 'git@github.com/openharmony/'
-    }
+    "openharmony": "https://github.com/openharmony/"
   }
 
   def __init__(self,
@@ -982,20 +979,18 @@ class Project(object):
 
   def SetMirrorUrl(self, remote_url):
     try:
+      namespace = ''
       if remote_url.find('git@') != -1:
         match = re.search(r':([^/]+)', remote_url)
         if match:
           namespace = match.group(1).strip()
-          gitee_platform = True if remote_url.find('gitee.com') != -1 else False
-          gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
-          if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
-            self.mirror_url = self.mirror_url_mapping.get(namespace, {}).get('ssh')
       else:
         namespace = remote_url.split('/')[-2]
-        gitee_platform = True if remote_url.find('gitee.com') != -1 else False
-        gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
-        if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
-          self.mirror_url = self.mirror_url_mapping.get(namespace, {}).get('http')
+
+      gitee_platform = True if remote_url.find('gitee.com') != -1 else False
+      gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
+      if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
+        self.mirror_url = self.mirror_url_mapping.get(namespace, '')
     except IndexError:
       pass
 
