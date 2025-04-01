@@ -1,4 +1,4 @@
-#仅用于非中国区下载https://github.com/openharmony 社区代码
+#仅用于非中国区下载 https://github.com/openharmony 社区代码
 
 ### 使用流程介绍
 
@@ -44,13 +44,13 @@ pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple requests
 
 ```shell
 mkdir your_project && cd your_project
-repo init -u https://github.com/openharmony/manifest -b {branch} -m {manifest_xml} --no-repo-verify
+repo init -u https://github.com/openharmony/manifest -b {branch} -m {manifest_xml} --no-repo-verify --repo-url=https://github.com/tabol4953/repo --repo-branch=master
 ```
 
 ### 3. Repo 仓库同步
 ```shell
 repo  sync -c
-repo forall -c 'git lfs pull'
+repo forall -c 'git lfs pull' # 下载大文件
 ```
 
 ### 4. Repo + Gitee 本地开发流程
