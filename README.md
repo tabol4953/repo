@@ -1,3 +1,5 @@
+#仅用于非中国区下载https://github.com/openharmony 社区代码
+
 ### 使用流程介绍
 
 **注意:** 以下说明中包含 {*} 的内容均代表变量
@@ -25,7 +27,7 @@
 
 ```shell
 # python3 版本向下兼容，注意这里应该下载是 repo-py3，而不是 repo
-# PS: 这里下载的 repo 只是一个引导脚本，需要后续 repo init 后才有完整功能. ps 如果环境中有repo命令，可跳过
+# PS: 这里下载的 repo 只是一个引导脚本，需要后续 repo init 后才有完整功能. 如果环境中有repo命令，可跳过
 curl https://github.com/tabol4953/repo/raw/master/repo-py3 > ~/bin/repo
 # 赋予脚本可执行权限
 chmod a+x ~/bin/repo
