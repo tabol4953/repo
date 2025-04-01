@@ -5,6 +5,7 @@
 1. repo 引导命令下载
 2. repo init 初始化
 3. repo sync 仓库同步
+4. repo + gitee 本地开发流程
 
 ### 前提条件
 
@@ -24,7 +25,7 @@
 
 ```shell
 # python3 版本向下兼容，注意这里应该下载是 repo-py3，而不是 repo
-# PS: 这里下载的 repo 只是一个引导脚本，需要后续 repo init 后才有完整功能
+# PS: 这里下载的 repo 只是一个引导脚本，需要后续 repo init 后才有完整功能. ps 如果环境中有repo命令，可跳过
 curl https://github.com/tabol4953/repo/raw/master/repo-py3 > ~/bin/repo
 # 赋予脚本可执行权限
 chmod a+x ~/bin/repo
@@ -48,4 +49,15 @@ repo init -u https://github.com/openharmony/manifest -b {branch} -m {manifest_xm
 ```shell
 repo  sync -c
 repo forall -c 'git lfs pull'
+```
+
+### 4. Repo + Gitee 本地开发流程
+```shell
+repo start {branch} --all # 切换开发分支，当对部分仓库进行指定时，会触发仓库的预先fork
+repo forall -c git add ./ git add  # 批量加入暂存区或者单独加入
+repo forall -c git commit -m --signoff {msg} / git commit  # 批量进行提交或者单独提交
+repo config --global repo.token {TOKEN} # 进行 gitee access_token 配置, access_token 获取连接 https://gitee.com/profile/personal_access_tokens
+repo config repo.pullrequest {True/False} # 对是否触发PR进行配置
+repo push --br={BRANCH} --d={DEST_BRANCH} --title {title} # 进行推送并生成PR和审查，执行后会展示出可进行推送的项目，去掉注释的分支会进行后续推送
+repo gitee-pr --br={BRANCH} # 获取项目推送后的指定分支的PR列表
 ```
