@@ -865,6 +865,7 @@ class Project(object):
   mirror_url_mapping = {
     "openharmony": "https://github.com/openharmony/"
   }
+  default_source_url = 'https://gitee.com/openharmony/'
 
   def __init__(self,
                manifest,
@@ -977,20 +978,33 @@ class Project(object):
     self.enabled_repo_hooks = []
     self.mirror_url = ''
 
-  def SetMirrorUrl(self, remote_url):
+  def SetMirrorUrl(self):
     try:
       namespace = ''
-      if remote_url.find('git@') != -1:
-        match = re.search(r':([^/]+)', remote_url)
-        if match:
-          namespace = match.group(1).strip()
-      else:
-        namespace = remote_url.split('/')[-2]
+      remote_url = self.remote.url
+      if remote_url.find('github') == -1:
+        if remote_url.find('git@') != -1:
+          match = re.search(r':([^/]+)', remote_url)
+          if match:
+            namespace = match.group(1).strip()
+        else:
+          namespace = remote_url.split('/')[-2]
 
-      gitee_platform = True if remote_url.find('gitee.com') != -1 else False
-      gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
-      if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
-        self.mirror_url = self.mirror_url_mapping.get(namespace, '')
+        gitee_platform = True if remote_url.find('gitee.com') != -1 else False
+        gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
+        if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
+          self.mirror_url = self.mirror_url_mapping.get(namespace, '') + self.name + '.git'
+      else:
+        if remote_url.find('git@') != -1:
+          match = re.search(r':([^/]+)', remote_url)
+          if match:
+            namespace = match.group(1).strip()
+        else:
+          namespace = remote_url.split('/')[-2]
+
+        if namespace in self.mirror_url_mapping.keys():
+          self.mirror_url = self.remote.url
+          self.remote.url = self.default_source_url + self.name + '.git'
     except IndexError:
       pass
 
@@ -3156,7 +3170,7 @@ class Project(object):
       if self.mirror_url:
         mirror_name = self.remote.name + '_mirror'
         remote_mirror = self.GetRemote(mirror_name)
-        remote_mirror.url = self.mirror_url + self.name + '.git'
+        remote_mirror.url = self.mirror_url
         remote_mirror.review = self.remote.review
         remote_mirror.projectname = self.name
         remote_mirror.fetch = []

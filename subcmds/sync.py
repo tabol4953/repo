@@ -309,7 +309,7 @@ later is required to fix a server side protocol bug.
     try:
         for project in projects:
           if not opt.no_mirror:
-            project.SetMirrorUrl(project.remote.url)
+            project.SetMirrorUrl()
           success = self._FetchHelper(opt, project, *args, **kwargs)
           if not success and opt.fail_fast:
             break
