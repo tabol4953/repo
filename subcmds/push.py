@@ -404,6 +404,7 @@ Gerrit Code Review:  http://code.google.com/p/gerrit/
 
     # if not create new branch, check whether branch has new commit.
     for project in project_list:
+        project.SetMirrorUrl()
         branch_tmp = branch if branch else project.CurrentBranch
         if (not opt.new_branch and
                 project.GetUploadableBranch(branch_tmp) is None):
