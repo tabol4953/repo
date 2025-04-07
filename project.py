@@ -982,29 +982,30 @@ class Project(object):
     try:
       namespace = ''
       remote_url = self.remote.url
-      if remote_url.find('github') == -1:
-        if remote_url.find('git@') != -1:
-          match = re.search(r':([^/]+)', remote_url)
-          if match:
-            namespace = match.group(1).strip()
+      if remote_url:
+        if remote_url.find('github') == -1:
+          if remote_url.find('git@') != -1:
+            match = re.search(r':([^/]+)', remote_url)
+            if match:
+              namespace = match.group(1).strip()
+          else:
+            namespace = remote_url.split('/')[-2]
+  
+          gitee_platform = True if remote_url.find('gitee.com') != -1 else False
+          gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
+          if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
+            self.mirror_url = self.mirror_url_mapping.get(namespace, '') + self.name + '.git'
         else:
-          namespace = remote_url.split('/')[-2]
-
-        gitee_platform = True if remote_url.find('gitee.com') != -1 else False
-        gitcode_platform = True if remote_url.find('gitcode.com') != -1 else False
-        if (gitee_platform or gitcode_platform) and namespace in self.mirror_url_mapping.keys():
-          self.mirror_url = self.mirror_url_mapping.get(namespace, '') + self.name + '.git'
-      else:
-        if remote_url.find('git@') != -1:
-          match = re.search(r':([^/]+)', remote_url)
-          if match:
-            namespace = match.group(1).strip()
-        else:
-          namespace = remote_url.split('/')[-2]
-
-        if namespace in self.mirror_url_mapping.keys():
-          self.mirror_url = self.remote.url
-          self.remote.url = self.default_source_url + self.name + '.git'
+          if remote_url.find('git@') != -1:
+            match = re.search(r':([^/]+)', remote_url)
+            if match:
+              namespace = match.group(1).strip()
+          else:
+            namespace = remote_url.split('/')[-2]
+  
+          if namespace in self.mirror_url_mapping.keys():
+            self.mirror_url = self.remote.url
+            self.remote.url = self.default_source_url + self.name + '.git'
     except IndexError:
       pass
 
@@ -3871,3 +3872,4 @@ class MetaProject(Project):
     elif self._revlist(not_rev(HEAD), revid):
       return True
     return False
+
